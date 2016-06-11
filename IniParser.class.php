@@ -25,7 +25,7 @@ class IniParser {
     
     public function __construct($return_object = false)
     {   
-        $this->dir = "accounts\\";
+        $this->dir = "./accounts/";
         $this->method = $return_object;
     }
 
@@ -38,7 +38,7 @@ class IniParser {
      * @return boolean
      */
 
-    public function file_find($file_name)
+    public function FileExists($file_name)
     {
         $this->path = "{$this->dir}{$file_name}.ini";
         if (file_exists($this->path) && !is_dir($this->path))
@@ -56,10 +56,10 @@ class IniParser {
      * @return array or object
      */
 
-    public function file_get($file_name)
+    public function GetFileContent($file_name)
     {
         $this->path = "{$this->dir}{$file_name}.ini";
-        if ($this->file_find($file_name))
+        if ($this->FileExists($file_name))
         {
         	$res = array();
             $parse_arr = parse_ini_file($this->path, false);
@@ -80,10 +80,10 @@ class IniParser {
      * @return boolean
      */
 
-    public function file_delete($file_name)
+    public function DeleteFile($file_name)
     {
         $this->path = "{$this->dir}{$file_name}.ini";
-        if ($this->file_find($file_name))
+        if ($this->FileExists($file_name))
         {
             if (unlink($this->path))
             {
@@ -102,9 +102,9 @@ class IniParser {
      * @return n/a
      */
 
-    public function file_update($array, $file_name)
+    public function UpdateFile($array, $file_name)
     {
-    	$this_ac = $this->file_get($file_name, true);
+    	$this_ac = $this->GetFileContent($file_name, true);
     	if($this_ac)
     	{
     		$res = array();
@@ -123,7 +123,7 @@ class IniParser {
 	    			$res[] = "$a_key = " . (is_numeric($a_val) ? $a_val : '"' . $a_val . '"');
 	    		}
 	    	}
-	        $this->safefilerewrite($file_name, implode("\r\n", $res));
+	        $this->SaveFile($file_name, implode("\r\n", $res));
     	}
     }
 
@@ -137,14 +137,14 @@ class IniParser {
      * @return n/a
      */
 
-    public function file_create($array, $file_name)
+    public function CreateFile($array, $file_name)
     {
         $res = array();
         foreach($array as $key => $val)
         {
             $res[] = "$key = " . (is_numeric($val) ? $val : '"' . $val . '"');
         }
-        $this->safefilerewrite($file_name, implode("\r\n", $res));
+        $this->SaveFile($file_name, implode("\r\n", $res));
     }
 
     /**
@@ -157,7 +157,7 @@ class IniParser {
      * @return n/a
      */
 
-    private function safefilerewrite($file_name, $dataToSave)
+    private function SaveFile($file_name, $dataToSave)
     {
         $this->path = "{$this->dir}{$file_name}.ini";
         if ($fp = fopen($this->path, 'w'))
