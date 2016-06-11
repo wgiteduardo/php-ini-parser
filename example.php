@@ -4,5 +4,5 @@ require('IniParser.class.php');
 
 $ini = new IniParser();
 
-$user = $ini->file_get('Eduardo');
+$user = $ini->GetFileContent('Eduardo');
 echo $user['money'];
